@@ -1,0 +1,30 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model users {
+  id                 String              @id @default(uuid())
+  username           String              @unique @db.VarChar(20)
+  first_name         String              @db.VarChar(20)
+  last_name          String              @db.VarChar(20)
+  email              String              @unique
+  password           String
+  verified           Boolean             @default(false)
+  createdAt          DateTime            @default(now())
+  verification_codes verification_codes?
+}
+
+model verification_codes {
+  id        String   @id @default(uuid())
+  code      String   
+  user      String   @unique
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+  Users     users    @relation(fields: [user], references: [email], onDelete: Cascade)
+
+  @@unique([code , user])
+}
