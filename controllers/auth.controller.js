@@ -12,7 +12,8 @@ export const COOKIES_OPTIONS = {
     sameSite: "strict",
     path: "/",
     secure: true,
-    httpOnly: true
+    httpOnly: true,
+    maxAge: 15 * 24 * 60 * 60 * 1000
 }
 
 export const tokenGeneration = async (res , payload = {} , userId) => {
@@ -20,7 +21,7 @@ export const tokenGeneration = async (res , payload = {} , userId) => {
 
     payload = {
         ...payload,
-        token_id: tokenId
+        tokenId: tokenId
     }
 
     const accessToken = jwt.sign(payload, process.env.JWT_ACCESS_KEY, {
@@ -47,7 +48,6 @@ export const tokenGeneration = async (res , payload = {} , userId) => {
 
     res.cookie("access_token" , accessToken , {
         ...COOKIES_OPTIONS,
-        maxAge: 900000
     });
 }
 
@@ -304,9 +304,9 @@ const verifyOTP = async (req , res) => {
         });
 
         await tokenGeneration(res , {
-            userId: otp.user.id,
+            userId: otp.Users.id,
             verified: true
-        }, otp.user.id);
+        }, otp.Users.id);
 
         return res.status(200).json({
             message: "You have verified your account successfully!",

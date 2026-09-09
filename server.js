@@ -3,6 +3,7 @@ import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import helmet from "helmet";
+import cookieParser from "cookie-parser";
 
 import authRouter from "./routes/auth.routes.js";
 import { standardRateLimit } from "./middlewares/limiters.js";
@@ -14,6 +15,7 @@ const PORT = process.env.PORT || 3001;
 app.use(express.json());
 app.use(cors());
 app.use(helmet());
+app.use(cookieParser());
 app.use(standardRateLimit);
 
 app.use("/api" , authRouter)
